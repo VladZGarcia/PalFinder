@@ -1,27 +1,27 @@
-package com.example.palfinder.Profile
+package com.example.palfinder.PersonProfileFragments
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.example.palfinder.Person
+import com.example.palfinder.Person.Person
 import com.example.palfinder.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class PersonProfileEditFragment : Fragment() {
+class PersonProfileRegisterFragment : Fragment() {
 
     lateinit var et_name: EditText
     lateinit var et_socialsecuritynumber: EditText
     lateinit var et_city: EditText
     lateinit var et_phonenumber: EditText
     lateinit var et_interest: EditText
-    lateinit var et_email:EditText
+    lateinit var et_email: EditText
     lateinit var et_description: EditText
 
 
@@ -30,26 +30,14 @@ class PersonProfileEditFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-     /*   val view = inflater.inflate(R.layout.fragment_person_profile_edit, container, false)
-        val updateButton = view.findViewById<Button>(R.id.button_register)
-
-        updateButton.setOnClickListener {
-            val personProfileViewFragment = PersonProfileViewFragment()
-            val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
-            transaction.replace(R.id.fragment_container, personProfileViewFragment)
-            transaction.commit()
-        }
-*/
-
-        return inflater.inflate(R.layout.fragment_person_profile_edit, container, false)
-
-
+        return inflater.inflate(R.layout.fragment_person_profile_register, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         et_name = view.findViewById(R.id.et_name)
         et_socialsecuritynumber = view.findViewById(R.id.et_soicalsecuritynumber)
@@ -64,13 +52,6 @@ class PersonProfileEditFragment : Fragment() {
         val updateButton = view.findViewById<Button>(R.id.button_register)
 
         updateButton.setOnClickListener {
-          /*  //On Button-click send user to another fragment
-            val personProfileViewFragment = PersonProfileViewFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, personProfileViewFragment, "findThisFragment")
-                .addToBackStack(null)
-                .commit()
-           */
 
             val person = Person(
                 et_name.text.toString(),
@@ -82,7 +63,7 @@ class PersonProfileEditFragment : Fragment() {
                 et_description.text.toString()
             )
 
-            db.collection("users")//skriver till databasen
+            db.collection("users")
                 .add(person)
                 .addOnSuccessListener { documentReference ->
                     Toast.makeText(view.context, "Success", Toast.LENGTH_LONG).show()
@@ -93,7 +74,8 @@ class PersonProfileEditFragment : Fragment() {
 
         }
 
-    }
+
+        }
 
 
 }

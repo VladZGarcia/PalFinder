@@ -1,32 +1,28 @@
-package com.example.palfinder.Profile
+package com.example.palfinder.PersonProfileFragments
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.palfinder.Person
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.example.palfinder.Person.Person
 import com.example.palfinder.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class PersonProfileRegisterFragment : Fragment() {
+class PersonProfileEditFragment : Fragment() {
 
     lateinit var et_name: EditText
     lateinit var et_socialsecuritynumber: EditText
     lateinit var et_city: EditText
     lateinit var et_phonenumber: EditText
     lateinit var et_interest: EditText
-    lateinit var et_email: EditText
+    lateinit var et_email:EditText
     lateinit var et_description: EditText
 
 
@@ -35,19 +31,26 @@ class PersonProfileRegisterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_person_profile_register, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_person_profile_edit, container, false)
+        val updateButton = view.findViewById<Button>(R.id.button_register)
+
+        updateButton.setOnClickListener {
+            val personProfileViewFragment = PersonProfileViewFragment()
+            val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+            transaction.replace(R.id.fragment_container, personProfileViewFragment)
+            transaction.commit()
+        }
+
+
+        return inflater.inflate(R.layout.fragment_person_profile_edit, container, false)
+
+
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-      /*  //Profile Pic.
-        val editButton = view.findViewById<Button>(R.id.edit_button)
-        editButton.setOnClickListener(){
-            intentCamera()
-        }
-      */
 
         et_name = view.findViewById(R.id.et_name)
         et_socialsecuritynumber = view.findViewById(R.id.et_soicalsecuritynumber)
@@ -62,6 +65,13 @@ class PersonProfileRegisterFragment : Fragment() {
         val updateButton = view.findViewById<Button>(R.id.button_register)
 
         updateButton.setOnClickListener {
+            //On Button-click send user to another fragment
+            val personProfileViewFragment = PersonProfileViewFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, personProfileViewFragment, "findThisFragment")
+                .addToBackStack(null)
+                .commit()
+
 
             val person = Person(
                 et_name.text.toString(),
@@ -73,7 +83,7 @@ class PersonProfileRegisterFragment : Fragment() {
                 et_description.text.toString()
             )
 
-            db.collection("users")
+            db.collection("users")//skriver till databasen
                 .add(person)
                 .addOnSuccessListener { documentReference ->
                     Toast.makeText(view.context, "Success", Toast.LENGTH_LONG).show()
@@ -84,32 +94,7 @@ class PersonProfileRegisterFragment : Fragment() {
 
         }
 
-
-        }
-
-    /* companion object{
-        const val REQUEST_CAMERA = 180
     }
-
-    private fun intentCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also{ intent ->
-            activity?.packageManager?.let {
-                intent.resolveActivity(it).also {
-                    startActivityForResult(intent, REQUEST_CAMERA)
-                }
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK){
-            val impBitmap = data?.extras?.get("data") as Bitmap
-            uploadImage(imgBitmap)
-        }
-    }
-
-     */
 
 
 }
